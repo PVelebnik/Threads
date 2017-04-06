@@ -43,6 +43,7 @@ namespace
 					return LINE_TYPE::MULTICOMMENT_START;
 				}
 			}
+
 		}
 
 	}
@@ -61,16 +62,8 @@ void SearchFiles(std::string str, std::vector<boost::filesystem::path>& vec)
 	}
 }
 
-Statistic CountLinesInFile(boost::filesystem::path path, Statistic& statistic)
+void CountLinesInFile(boost::filesystem::path path, Statistic& statistic)
 {
-	/*std::ifstream inFile(path.string());
-	int all_lines = std::count(std::istreambuf_iterator<char>(inFile),
-	std::istreambuf_iterator<char>(), '\n');
-	int blank_lines = 0;
-
-	std::cout << "All lines: " << all_lines <<std::endl;
-	std::cout << "Blank lines: " << blank_lines << std::endl;*/
-
 	std::ifstream inFile(path.string());
 	std::string s;
 	bool in_multicomment = false;
@@ -125,14 +118,12 @@ Statistic CountLinesInFile(boost::filesystem::path path, Statistic& statistic)
 		}
 		statistic.m_all_lines++;
 	}
-	return statistic;
 }
 
-Statistic CountLinesInFilePackage(std::vector<boost::filesystem::path> file_names, Statistic& statistic)
+void CountLinesInFilePackage(std::vector<boost::filesystem::path> file_names, Statistic& statistic)
 {
 	for (int i = 0; i < file_names.size(); i++)
 	{
 		CountLinesInFile(file_names[i], statistic);
 	}
-	return statistic;
 }

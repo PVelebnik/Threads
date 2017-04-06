@@ -8,5 +8,5 @@
 #include <chrono>  
 
 void SearchFiles(std::string str, std::vector<boost::filesystem::path>& vec);
-Statistic CountLinesInFile(boost::filesystem::path path, Statistic& statistic);
-Statistic CountLinesInFilePackage(std::vector<boost::filesystem::path> file_names, Statistic& statistic);
+void CountLinesInFile(boost::filesystem::path path, Statistic& statistic);
+void CountLinesInFilePackage(std::vector<boost::filesystem::path> file_names, Statistic& statistic);

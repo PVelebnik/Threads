@@ -29,14 +29,3 @@ void Statistic::WriteToFile(std::ofstream& file_to_write)
 				<< "\nComment lines: " << m_comment_lines
 				<< "\nTime: " << m_time << " ms" << std::endl;
 }
-
-void Statistic::CountStatistics(std::vector<Statistic> statistic_for_threads, Statistic& result)
-{
-	for (int i = 0; i < statistic_for_threads.size(); i++)
-	{
-		result.m_all_lines += statistic_for_threads[i].m_all_lines;
-		result.m_blank_lines += statistic_for_threads[i].m_blank_lines;
-		result.m_code_lines += statistic_for_threads[i].m_code_lines;
-		result.m_comment_lines += statistic_for_threads[i].m_comment_lines;
-	}
-}

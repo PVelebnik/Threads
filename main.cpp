@@ -29,20 +29,17 @@ void main()
 		subvector_to_push++;
 	}
 
-	std::vector<Statistic> statistic_for_threads(best_threads_quantity);
 	std::chrono::high_resolution_clock::time_point start
 		= std::chrono::high_resolution_clock::now();
 
 	for (size_t i = 0; i < best_threads_quantity; i++)
 	{
-		threads_for_parsing.emplace_back(std::thread (CountLinesInFilePackage, packages[i], std::ref(statistic_for_threads[i])));
+		threads_for_parsing.emplace_back(std::thread (CountLinesInFilePackage, packages[i], std::ref(statistic)));
 	}
 	for (size_t i = 0; i < best_threads_quantity; i++)
 	{
 		threads_for_parsing[i].join();
 	}
-
-	Statistic::CountStatistics(statistic_for_threads, statistic);
 	
 	std::chrono::high_resolution_clock::time_point finish
 		= std::chrono::high_resolution_clock::now();
