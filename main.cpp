@@ -1,10 +1,9 @@
+#include "Helpers.h"
+#include "Statistic.h"
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <fstream>
 #include <thread>
-
-#include "Helpers.h"
-#include "Statistic.h"
 
 void main()
 {
@@ -15,15 +14,15 @@ void main()
 	form_file_vector.join();
 
 	Statistic statistic;
-	statistic.m_files_quantity = file_names.size();
+	statistic.m_files_quantity = static_cast<std::uint32_t>(file_names.size());
 
-	int best_threads_quantity = std::thread::hardware_concurrency();
+	unsigned best_threads_quantity = std::thread::hardware_concurrency();
 	std::vector<std::thread> threads_for_parsing;
 
 
 	std::vector<std::vector<boost::filesystem::path>> packages(best_threads_quantity);
 
-	int subvector_to_push=0;
+	unsigned subvector_to_push = 0;
 	for (auto element: file_names)
 	{
 		packages[subvector_to_push%best_threads_quantity].push_back(element);
@@ -43,17 +42,8 @@ void main()
 		threads_for_parsing[i].join();
 	}
 
-	for (int i = 0; i < statistic_for_threads.size(); i++)
-	{
-		statistic.m_all_lines += statistic_for_threads[i].m_all_lines;
-		statistic.m_blank_lines += statistic_for_threads[i].m_blank_lines;
-		statistic.m_code_lines += statistic_for_threads[i].m_code_lines;
-		statistic.m_comment_lines += statistic_for_threads[i].m_comment_lines;
-	}
-
-	/*std::thread count_lines_in_package(CountLinesInFilePackage, file_names, std::ref(statistic));
-	count_lines_in_package.join();*/
-
+	Statistic::CountStatistics(statistic_for_threads, statistic);
+	
 	std::chrono::high_resolution_clock::time_point finish
 		= std::chrono::high_resolution_clock::now();
 

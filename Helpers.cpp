@@ -43,7 +43,6 @@ namespace
 					return LINE_TYPE::MULTICOMMENT_START;
 				}
 			}
-			///
 		}
 
 	}
@@ -74,7 +73,6 @@ Statistic CountLinesInFile(boost::filesystem::path path, Statistic& statistic)
 
 	std::ifstream inFile(path.string());
 	std::string s;
-
 	bool in_multicomment = false;
 	while (std::getline(inFile, s))
 	{
@@ -92,8 +90,9 @@ Statistic CountLinesInFile(boost::filesystem::path path, Statistic& statistic)
 			switch (result)
 			{
 			case LINE_TYPE::BLANK:
-			{	statistic.m_blank_lines++;
-			break;
+			{	
+				statistic.m_blank_lines++;
+				break;
 			}
 			case LINE_TYPE::COMMENT:
 			{
