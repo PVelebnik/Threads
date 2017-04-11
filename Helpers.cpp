@@ -13,7 +13,7 @@ namespace
 {
 	LineType Find(const std::string& str)
 	{
-		std::size_t position = str.std::string::find_first_not_of("\t ");
+		const std::size_t position = str.std::string::find_first_not_of("\t ");
 		if (position == std::string::npos)
 		{
 			return LineType::Blank;
@@ -49,21 +49,19 @@ namespace
 	}
 }
 
-void SearchFiles(std::string str, std::vector<boost::filesystem::path>& vec)
+void SearchFiles(const std::string& str, std::vector<boost::filesystem::path>& vec)
 {
 	for (boost::filesystem::recursive_directory_iterator it(str), end; it != end; ++it) 
 	{
-		if (it->path().extension() == ".cpp" 
-			|| it->path().extension() == ".c" 
-			|| it->path().extension() == ".hpp" 
-			|| it->path().extension() == ".h")
+		std::string path = it->path().extension().string();
+		if (path == ".cpp" || path == ".c" || path == ".hpp" || path == ".h")
 		{
 			vec.push_back(*it);
 		}
 	}
 }
 
-void CountLinesInFile(boost::filesystem::path path, Statistic& statistic)
+void CountLinesInFile(const boost::filesystem::path& path, Statistic& statistic)
 {
 	std::ifstream in_file(path.string());
 	std::string str;
@@ -121,7 +119,7 @@ void CountLinesInFile(boost::filesystem::path path, Statistic& statistic)
 	}
 }
 
-void CountLinesInFilePackage(std::vector<boost::filesystem::path> file_names, Statistic& statistic)
+void CountLinesInFilePackage(const std::vector<boost::filesystem::path>& file_names, Statistic& statistic)
 {
 	for (int i = 0; i < file_names.size(); i++)
 	{

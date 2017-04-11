@@ -7,7 +7,7 @@
 
 void main()
 {
-	std::string path = "D:/SS/Task 3 (threads)/boost/boost_lib";
+	const std::string path = "D:/SS/Task 3 (threads)/boost/boost_lib";
 	std::vector<boost::filesystem::path> file_names;
 
 	std::thread form_file_vector(SearchFiles, path, std::ref(file_names));
@@ -16,20 +16,20 @@ void main()
 	Statistic statistic;
 	statistic.files_quantity = static_cast<std::uint32_t>(file_names.size());
 
-	unsigned best_threads_quantity = std::thread::hardware_concurrency();
+	const unsigned best_threads_quantity = std::thread::hardware_concurrency();
 	std::vector<std::thread> threads_for_parsing;
 
 
 	std::vector<std::vector<boost::filesystem::path>> packages(best_threads_quantity);
 
 	unsigned subvector_to_push = 0;
-	for (auto element: file_names)
+	for (const auto& element: file_names)
 	{
 		packages[subvector_to_push%best_threads_quantity].push_back(element);
 		subvector_to_push++;
 	}
 
-	std::chrono::high_resolution_clock::time_point start
+	const std::chrono::high_resolution_clock::time_point start
 		= std::chrono::high_resolution_clock::now();
 
 	for (size_t i = 0; i < best_threads_quantity; i++)
@@ -42,10 +42,10 @@ void main()
 		threads_for_parsing[i].join();
 	}
 	
-	std::chrono::high_resolution_clock::time_point finish
+	const std::chrono::high_resolution_clock::time_point finish
 		= std::chrono::high_resolution_clock::now();
 
-	std::chrono::duration<int, std::milli> time_span
+	const std::chrono::duration<int, std::milli> time_span
 		= std::chrono::duration_cast<std::chrono::milliseconds>(finish - start);
 
 	statistic.time = time_span.count();
