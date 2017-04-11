@@ -1,22 +1,22 @@
 #include "Helpers.h"
 
-enum class LINE_TYPE
+enum class LineType
 {
-	BLANK,
-	COMMENT,
-	MULTICOMMENT_START,
-	CODE_AND_MULTICOMMENT_START,
-	CODE
+	Blank,
+	Comment,
+	MulticommentStart,
+	CodeAndMulticommentStart,
+	Code
 };
 
 namespace
 {
-	LINE_TYPE find(const std::string& str)
+	LineType Find(const std::string& str)
 	{
 		std::size_t position = str.std::string::find_first_not_of("\t ");
 		if (position == std::string::npos)
 		{
-			return LINE_TYPE::BLANK;
+			return LineType::Blank;
 		}
 		else
 		{
@@ -24,23 +24,23 @@ namespace
 			{
 				if (str[position + 1] == '/')
 				{
-					return LINE_TYPE::COMMENT;
+					return LineType::Comment;
 				}
 				else if (str[position + 1] == '*')
 				{
-					return LINE_TYPE::MULTICOMMENT_START;
+					return LineType::MulticommentStart;
 				}
-				return LINE_TYPE::CODE;
+				return LineType::Code;
 			}
 			else
 			{
 				if (str.find("/*", position) == std::string::npos)
 				{
-					return LINE_TYPE::CODE;
+					return LineType::Code;
 				}
 				else
 				{
-					return LINE_TYPE::MULTICOMMENT_START;
+					return LineType::MulticommentStart;
 				}
 			}
 
@@ -51,11 +51,12 @@ namespace
 
 void SearchFiles(std::string str, std::vector<boost::filesystem::path>& vec)
 {
-	for (boost::filesystem::recursive_directory_iterator it(str), end; it != end; ++it) {
-		if (it->path().extension() == ".cpp" ||
-			it->path().extension() == ".c" ||
-			it->path().extension() == ".hpp" ||
-			it->path().extension() == ".h")
+	for (boost::filesystem::recursive_directory_iterator it(str), end; it != end; ++it) 
+	{
+		if (it->path().extension() == ".cpp" 
+			|| it->path().extension() == ".c" 
+			|| it->path().extension() == ".hpp" 
+			|| it->path().extension() == ".h")
 		{
 			vec.push_back(*it);
 		}
@@ -64,49 +65,49 @@ void SearchFiles(std::string str, std::vector<boost::filesystem::path>& vec)
 
 void CountLinesInFile(boost::filesystem::path path, Statistic& statistic)
 {
-	std::ifstream inFile(path.string());
-	std::string s;
+	std::ifstream in_file(path.string());
+	std::string str;
 	bool in_multicomment = false;
-	while (std::getline(inFile, s))
+	while (std::getline(in_file, str))
 	{
 		if (in_multicomment)
 		{
-			if (s.find("*/") != std::string::npos)
+			if (str.find("*/") != std::string::npos)
 			{
 				in_multicomment = false;
 			}
-			statistic.m_comment_lines++;
+			statistic.comment_lines++;
 		}
 		else
 		{
-			LINE_TYPE result = find(s);
+			LineType result = Find(str);
 			switch (result)
 			{
-			case LINE_TYPE::BLANK:
+			case LineType::Blank:
 			{	
-				statistic.m_blank_lines++;
+				statistic.blank_lines++;
 				break;
 			}
-			case LINE_TYPE::COMMENT:
+			case LineType::Comment:
 			{
-				statistic.m_comment_lines++;
+				statistic.comment_lines++;
 				break;
 			}
-			case LINE_TYPE::MULTICOMMENT_START:
+			case LineType::MulticommentStart:
 			{
-				statistic.m_comment_lines++;
+				statistic.comment_lines++;
 				in_multicomment = true;
 				break;
 			}
-			case LINE_TYPE::CODE_AND_MULTICOMMENT_START:
+			case LineType::CodeAndMulticommentStart:
 			{
-				statistic.m_code_lines++;
+				statistic.code_lines++;
 				in_multicomment = true;
 				break;
 			}
-			case LINE_TYPE::CODE:
+			case LineType::Code:
 			{
-				statistic.m_code_lines++;
+				statistic.code_lines++;
 				break;
 			}
 			default:
@@ -116,7 +117,7 @@ void CountLinesInFile(boost::filesystem::path path, Statistic& statistic)
 			}
 			}
 		}
-		statistic.m_all_lines++;
+		statistic.all_lines++;
 	}
 }
 

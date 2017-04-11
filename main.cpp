@@ -7,14 +7,14 @@
 
 void main()
 {
-	std::string str = "D:/SS/Task 3 (threads)/boost/boost_lib";
+	std::string path = "D:/SS/Task 3 (threads)/boost/boost_lib";
 	std::vector<boost::filesystem::path> file_names;
 
-	std::thread form_file_vector(SearchFiles, str, std::ref(file_names));
+	std::thread form_file_vector(SearchFiles, path, std::ref(file_names));
 	form_file_vector.join();
 
 	Statistic statistic;
-	statistic.m_files_quantity = static_cast<std::uint32_t>(file_names.size());
+	statistic.files_quantity = static_cast<std::uint32_t>(file_names.size());
 
 	unsigned best_threads_quantity = std::thread::hardware_concurrency();
 	std::vector<std::thread> threads_for_parsing;
@@ -34,7 +34,8 @@ void main()
 
 	for (size_t i = 0; i < best_threads_quantity; i++)
 	{
-		threads_for_parsing.emplace_back(std::thread (CountLinesInFilePackage, packages[i], std::ref(statistic)));
+		threads_for_parsing.emplace_back(std::thread (CountLinesInFilePackage
+			, packages[i], std::ref(statistic)));
 	}
 	for (size_t i = 0; i < best_threads_quantity; i++)
 	{
@@ -47,14 +48,14 @@ void main()
 	std::chrono::duration<int, std::milli> time_span
 		= std::chrono::duration_cast<std::chrono::milliseconds>(finish - start);
 
-	statistic.m_time = time_span.count();
+	statistic.time = time_span.count();
 
 	statistic.PrintStatistic();
 
-	std::ofstream myfile;
-	myfile.open("statistic.txt");
-	statistic.WriteToFile(myfile);
-	myfile.close();
+	std::ofstream output;
+	output.open("statistic.txt");
+	statistic.WriteToFile(output);
+	output.close();
 
 	system("pause");
 }

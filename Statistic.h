@@ -12,10 +12,10 @@ public:
 	void PrintStatistic();
 	void WriteToFile(std::ofstream& file_to_write);
 
-	std::atomic<std::uint32_t> m_files_quantity;
-	std::atomic<std::uint32_t> m_all_lines;
-	std::atomic<std::uint32_t> m_blank_lines;
-	std::atomic<std::uint32_t> m_code_lines;
-	std::atomic<std::uint32_t> m_comment_lines;
-	std::uint32_t m_time;
+	std::atomic<std::uint32_t> files_quantity;
+	std::atomic<std::uint32_t> all_lines;
+	std::atomic<std::uint32_t> blank_lines;
+	std::atomic<std::uint32_t> code_lines;
+	std::atomic<std::uint32_t> comment_lines;
+	std::uint32_t time;
 };
